@@ -25,5 +25,11 @@ public class Main {
 
     System.out.println("Retrieving all accounts");
     System.out.println(accountService.getAllAccounts());
+
+    System.out.println("Incrementing 10 to account with ID: " + accountId);
+    System.out.println(accountService.incrementBalance(accountId, BigDecimal.TEN));
+
+    System.out.println("Decrementing 10 from account with ID: " + accountId);
+    System.out.println(accountService.decrementBalance(accountId, BigDecimal.TEN));
   }
 }

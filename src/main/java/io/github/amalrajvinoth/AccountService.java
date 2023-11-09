@@ -37,5 +37,19 @@ public class AccountService {
     insert.insert();
     return insert;
   }
+
+  public AccountsRecord incrementBalance(String accountId, BigDecimal amount) {
+    AccountsRecord accountsRecord = getAccount(accountId);
+    accountsRecord.setBalance(accountsRecord.getBalance().add(amount));
+    accountsRecord.store();
+    return accountsRecord;
+  }
+
+  public AccountsRecord decrementBalance(String accountId, BigDecimal amount) {
+    AccountsRecord accountsRecord = getAccount(accountId);
+    accountsRecord.setBalance(accountsRecord.getBalance().subtract(amount));
+    accountsRecord.store();
+    return accountsRecord;
+  }
 }
 
