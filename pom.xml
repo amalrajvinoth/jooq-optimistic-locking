@@ -12,6 +12,125 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jooq.version>3.18.7</jooq.version>
+
+    <!-- Configuration for applying migrations -->
+    <jooq.skip.generation>true</jooq.skip.generation>
+    <postgres.host>${DATASOURCE_HOST}</postgres.host>
+    <postgres.port>${DATASOURCE_PORT}</postgres.port>
+    <postgres.user>${DATASOURCE_USER}</postgres.user>
+    <postgres.password>${DATASOURCE_PASSWORD}</postgres.password>
+    <postgres.database.name>${DATASOURCE_DATABASE_NAME}</postgres.database.name>
+
+    <postgres-driver.version>42.6.0</postgres-driver.version>
+    <flyway.version>7.5.2</flyway.version>
   </properties>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgres-driver.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>${flyway.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jooq</groupId>
+      <artifactId>jooq</artifactId>
+      <version>${jooq.version}</version>
+    </dependency>
+
+    <!-- These may not be required, unless you use the GenerationTool manually for code generation -->
+    <dependency>
+      <groupId>org.jooq</groupId>
+      <artifactId>jooq-meta</artifactId>
+      <version>${jooq.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jooq</groupId>
+      <artifactId>jooq-codegen</artifactId>
+      <version>${jooq.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <excludes>schema/jooq/**</excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+
+      <!-- jOOq plugin config -->
+      <plugin>
+        <groupId>org.jooq</groupId>
+        <artifactId>jooq-codegen-maven</artifactId>
+        <version>${jooq.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgres-driver.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <skip>${jooq.skip.generation}</skip>
+          <jdbc>
+            <driver>org.postgresql.Driver</driver>
+            <url>jdbc:postgresql://${postgres.host}:${postgres.port}/${postgres.database.name}</url>
+            <username>${postgres.user}</username>
+            <password>${postgres.password}</password>
+          </jdbc>
+          <generator>
+            <database>
+              <name>org.jooq.meta.postgres.PostgresDatabase</name>
+              <includes>.*</includes>
+              <inputSchema>public</inputSchema>
+              <excludes>flyway_schema_history</excludes>
+              <recordVersionFields>version</recordVersionFields>
+            </database>
+            <target>
+              <packageName>schema.jooq</packageName>
+              <directory>src/main/java/generated</directory>
+            </target>
+          </generator>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+
+      <!-- flyway plugin config -->
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>${flyway.version}</version>
+        <configuration>
+          <url>jdbc:postgresql://${postgres.host}:${postgres.port}/${postgres.database.name}</url>
+          <user>${postgres.user}</user>
+          <password>${postgres.password}</password>
+          <locations>
+            <location>filesystem:/${project.basedir}/src/main/resources/migration</location>
+          </locations>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
