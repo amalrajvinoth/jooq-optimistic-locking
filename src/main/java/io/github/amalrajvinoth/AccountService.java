@@ -47,9 +47,23 @@ public class AccountService {
 
   public AccountsRecord decrementBalance(String accountId, BigDecimal amount) {
     AccountsRecord accountsRecord = getAccount(accountId);
+    if(accountsRecord.getBalance().compareTo(amount) < 0) {
+      throw new InsufficientBalanceException("Account:"+accountId+" has insufficient balance");
+    }
     accountsRecord.setBalance(accountsRecord.getBalance().subtract(amount));
     accountsRecord.store();
     return accountsRecord;
+  }
+
+  public int deleteByAccount(String accountId) {
+    return dslContext.deleteFrom(ACCOUNTS)
+        .where(ACCOUNTS.ID.eq(accountId))
+        .execute();
+  }
+
+  public int deleteAllAccounts() {
+    return dslContext.deleteFrom(ACCOUNTS)
+        .execute();
   }
 }
 
