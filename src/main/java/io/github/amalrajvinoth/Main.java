@@ -4,20 +4,26 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class Main {
+
   public static void main(String[] args) {
-    Datasource datasource = new Datasource(
-        System.getProperty("DB_USER"),
-        System.getProperty("DB_PASSWORD"),
-        System.getProperty("DB_URL"));
-    
+    String dbUser = System.getProperty("DB_USER");
+    String dbPassword = System.getProperty("DB_PASSWORD");
+    String dbUrl = System.getProperty("DB_URL");
+
+    Datasource datasource = new Datasource(dbUser, dbPassword, dbUrl);
     JooqUtil util = new JooqUtil(datasource);
     AccountService accountService = new AccountService(util.getDslContext());
-    
+
     String accountId = UUID.randomUUID().toString();
-    System.out.println(accountService.createAccount(accountId, new BigDecimal("100.00")));
-    
+    BigDecimal initialBalance = new BigDecimal("100.00");
+
+    System.out.println("Creating account with ID: " + accountId);
+    System.out.println(accountService.createAccount(accountId, initialBalance));
+
+    System.out.println("Retrieving account details for account ID: " + accountId);
     System.out.println(accountService.getAccount(accountId));
-    
-    System.out.println(accountService.getAllAccount());
+
+    System.out.println("Retrieving all accounts");
+    System.out.println(accountService.getAllAccounts());
   }
 }

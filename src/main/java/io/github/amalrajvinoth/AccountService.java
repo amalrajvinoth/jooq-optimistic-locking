@@ -10,32 +10,32 @@ import schema.jooq.tables.records.AccountsRecord;
 
 public class AccountService {
 
-  private DSLContext dslContext;
-  
+  private final DSLContext dslContext;
+
   public AccountService(DSLContext dslContext) {
     this.dslContext = dslContext;
   }
 
-  public List<AccountsRecord> getAllAccount() {
-    return this.dslContext.select().from(ACCOUNTS).fetch().into(AccountsRecord.class);
+  public List<AccountsRecord> getAllAccounts() {
+    return dslContext.selectFrom(ACCOUNTS).fetch();
   }
-  
+
   public AccountsRecord getAccount(String accountId) {
-    return this.dslContext.fetchOne(ACCOUNTS,
-        ACCOUNTS.ID.eq(accountId));
+    return dslContext.selectFrom(ACCOUNTS)
+        .where(ACCOUNTS.ID.eq(accountId))
+        .fetchOne();
   }
 
   public AccountsRecord createAccount(String accountId, BigDecimal balance) {
-    AccountsRecord insert = new AccountsRecord();
-    insert.set(ACCOUNTS.ID, accountId);
-    insert.set(ACCOUNTS.BALANCE, balance);
-    insert.set(ACCOUNTS.VERSION, 1);
-    insert.set(ACCOUNTS.CREATED, OffsetDateTime.now());
-    insert.set(ACCOUNTS.UPDATED, OffsetDateTime.now());
-    AccountsRecord accountsRecord = this.dslContext.newRecord(ACCOUNTS, insert);
-    this.dslContext.insertInto(ACCOUNTS)
-        .set(accountsRecord)
-        .execute();
+    AccountsRecord insert = dslContext.newRecord(ACCOUNTS);
+    insert.setId(accountId);
+    insert.setBalance(balance);
+    insert.setVersion(1);
+    OffsetDateTime now = OffsetDateTime.now();
+    insert.setCreated(now);
+    insert.setUpdated(now);
+    insert.insert();
     return insert;
   }
 }
+

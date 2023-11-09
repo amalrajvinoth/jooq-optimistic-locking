@@ -17,17 +17,17 @@ public class JooqUtil {
     Objects.requireNonNull(datasource.dbUser(), "DB_USER is empty");
     Objects.requireNonNull(datasource.dbPassword(), "DB_PASSWORD is empty");
 
-    try {
-      initConnection(datasource);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    initConnection(datasource);
   }
 
-  private void initConnection(Datasource datasource) throws SQLException {
-    Connection connection = DriverManager.getConnection(datasource.dbUrl(), datasource.dbUser(),
-        datasource.dbPassword());
-    this.dslContext = DSL.using(connection, SQLDialect.POSTGRES);
+  private void initConnection(Datasource datasource) {
+    try {
+      Connection connection = DriverManager.getConnection(datasource.dbUrl(), datasource.dbUser(),
+          datasource.dbPassword());
+      this.dslContext = DSL.using(connection, SQLDialect.POSTGRES);
+    } catch (SQLException e) {
+      throw new RuntimeException("Failed to establish a database connection.", e);
+    }
   }
 
   public DSLContext getDslContext() {
