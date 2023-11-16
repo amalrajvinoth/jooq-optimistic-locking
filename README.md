@@ -1,12 +1,12 @@
-# jOOQ Optimistic Locking with Spring
+# jOOQ Optimistic Locking
 
-This repository demonstrates the integration of jOOQ's powerful querying capabilities with Spring's robust framework, specifically focusing on implementing optimistic locking strategies. The goal is to showcase how to leverage jOOQ's expressive DSL for building type-safe SQL queries and Spring's extensive features for building enterprise Java applications to implement efficient optimistic locking mechanisms.
+This repository demonstrates the integration of jOOQ's powerful querying capabilities , specifically focusing on implementing optimistic locking strategies. The goal is to showcase how to leverage jOOQ's expressive DSL for building type-safe SQL queries for building enterprise Java applications to implement efficient optimistic locking mechanisms.
 
 ## Key Features
 
-- Seamless integration of jOOQ and Spring for efficient database operations
+- Seamless integration of jOOQ for efficient database operations
 - Implementation of optimistic locking strategies to manage concurrent data access
-- Detailed examples and best practices for incorporating jOOQ and Spring functionalities
+- Detailed examples and best practices for incorporating jOOQ
 - Comprehensive documentation and code samples for easy understanding and implementation
 
 ## Installation
@@ -41,4 +41,4 @@ This repository demonstrates the integration of jOOQ's powerful querying capabil
 
 ## Usage
 
-Follow the guidelines in the [usage documentation](https://www.jooq.org/doc/latest/manual/getting-started/tutorials/jooq-in-7-steps/jooq-in-7-steps-step1/) to understand how to use the jOOQ and Spring integration with optimistic locking.
+Follow the guidelines in the [usage documentation](https://www.jooq.org/doc/latest/manual/getting-started/tutorials/jooq-in-7-steps/jooq-in-7-steps-step1/) to understand how to use the jOOQ with optimistic locking.
