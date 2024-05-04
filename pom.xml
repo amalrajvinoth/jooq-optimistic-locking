@@ -16,13 +16,18 @@
 
     <!-- Configuration for applying migrations -->
     <jooq.skip.generation>true</jooq.skip.generation>
+    <!--suppress UnresolvedMavenProperty -->
     <postgres.host>${DATASOURCE_HOST}</postgres.host>
+    <!--suppress UnresolvedMavenProperty -->
     <postgres.port>${DATASOURCE_PORT}</postgres.port>
+    <!--suppress UnresolvedMavenProperty -->
     <postgres.user>${DATASOURCE_USER}</postgres.user>
+    <!--suppress UnresolvedMavenProperty -->
     <postgres.password>${DATASOURCE_PASSWORD}</postgres.password>
+    <!--suppress UnresolvedMavenProperty -->
     <postgres.database.name>${DATASOURCE_DATABASE_NAME}</postgres.database.name>
 
-    <postgres-driver.version>42.6.0</postgres-driver.version>
+    <postgres-driver.version>42.7.3</postgres-driver.version>
     <flyway.version>7.5.2</flyway.version>
   </properties>
 
@@ -69,6 +74,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.3.1</version>
         <configuration>
           <excludes>schema/jooq/**</excludes>
         </configuration>

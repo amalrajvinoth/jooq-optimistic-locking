@@ -27,11 +27,11 @@ public class AccountService {
   }
 
   public AccountsRecord createAccount(String accountId, BigDecimal balance) {
-    AccountsRecord insert = dslContext.newRecord(ACCOUNTS);
+      var insert = dslContext.newRecord(ACCOUNTS);
     insert.setId(accountId);
     insert.setBalance(balance);
     insert.setVersion(1);
-    OffsetDateTime now = OffsetDateTime.now();
+      var now = OffsetDateTime.now();
     insert.setCreated(now);
     insert.setUpdated(now);
     insert.insert();
@@ -39,14 +39,14 @@ public class AccountService {
   }
 
   public AccountsRecord incrementBalance(String accountId, BigDecimal amount) {
-    AccountsRecord accountsRecord = getAccount(accountId);
+      var accountsRecord = getAccount(accountId);
     accountsRecord.setBalance(accountsRecord.getBalance().add(amount));
     accountsRecord.store();
     return accountsRecord;
   }
 
   public AccountsRecord decrementBalance(String accountId, BigDecimal amount) {
-    AccountsRecord accountsRecord = getAccount(accountId);
+      var accountsRecord = getAccount(accountId);
     if(accountsRecord.getBalance().compareTo(amount) < 0) {
       throw new InsufficientBalanceException("Account:"+accountId+" has insufficient balance");
     }
@@ -61,9 +61,9 @@ public class AccountService {
         .execute();
   }
 
-  public int deleteAllAccounts() {
-    return dslContext.deleteFrom(ACCOUNTS)
-        .execute();
+  public void deleteAllAccounts() {
+    dslContext.deleteFrom(ACCOUNTS)
+            .execute();
   }
 }
 

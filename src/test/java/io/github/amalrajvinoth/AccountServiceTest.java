@@ -1,19 +1,12 @@
 package io.github.amalrajvinoth;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.jooq.exception.IntegrityConstraintViolationException;
+import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
-import org.jooq.exception.IntegrityConstraintViolationException;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class AccountServiceTest {
 
@@ -24,18 +17,13 @@ class AccountServiceTest {
 
   @BeforeAll
   public static void setUp() {
-    String dbUser = System.getProperty("DB_USER");
-    String dbPassword = System.getProperty("DB_PASSWORD");
-    String dbUrl = System.getProperty("DB_URL");
+      var dbUser = System.getProperty("DB_USER");
+      var dbPassword = System.getProperty("DB_PASSWORD");
+      var dbUrl = System.getProperty("DB_URL");
 
-    Datasource datasource = new Datasource(dbUser, dbPassword, dbUrl);
-    JooqUtil util = new JooqUtil(datasource);
+      var datasource = new Datasource(dbUser, dbPassword, dbUrl);
+      var util = new JooqUtil(datasource);
     accountService = new AccountService(util.getDslContext());
-  }
-
-  @AfterAll
-  public static void tearDown() {
-    // Clean up resources if needed
   }
 
   @BeforeEach
@@ -70,7 +58,7 @@ class AccountServiceTest {
 
   @Test
   public void incrementBalance_positiveValue() {
-    BigDecimal incrementAmount = new BigDecimal("50.00");
+      var incrementAmount = new BigDecimal("50.00");
     accountService.incrementBalance(accountId, incrementAmount);
 
     var retrievedAccount = accountService.getAccount(accountId);
@@ -80,13 +68,13 @@ class AccountServiceTest {
 
   @Test
   public void decrementBalance_insufficientBalance() {
-    BigDecimal decrementAmount = new BigDecimal("150.00");
+      var decrementAmount = new BigDecimal("150.00");
     assertThrows(InsufficientBalanceException.class, () -> accountService.decrementBalance(accountId, decrementAmount));
   }
 
   @Test
   public void deleteByAccount_validAccount() {
-    int deleted = accountService.deleteByAccount(accountId);
+      var deleted = accountService.deleteByAccount(accountId);
     assertEquals(1, deleted);
 
     var deletedAccount = accountService.getAccount(accountId);
@@ -97,7 +85,7 @@ class AccountServiceTest {
 
   @Test
   public void deleteByAccount_invalidAccount() {
-    String invalidAccountId = UUID.randomUUID().toString();
+      var invalidAccountId = UUID.randomUUID().toString();
 
     assertEquals(0, accountService.deleteByAccount(invalidAccountId));
   }

@@ -1,6 +1,5 @@
 package io.github.amalrajvinoth;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -22,7 +21,7 @@ public class JooqUtil {
 
   private void initConnection(Datasource datasource) {
     try {
-      Connection connection = DriverManager.getConnection(datasource.dbUrl(), datasource.dbUser(),
+        var connection = DriverManager.getConnection(datasource.dbUrl(), datasource.dbUser(),
           datasource.dbPassword());
       this.dslContext = DSL.using(connection, SQLDialect.POSTGRES);
     } catch (SQLException e) {
